@@ -18,5 +18,5 @@ Pour éxéctuer l'exemple 1 du chapitre 2, lancez par exemple la commande suivan
 du projet
 
 ```
-$ pipenv run python -m cours.chapter1.exemple1
+$ pipenv run python -m cours.chapter2.exemple2
 ```
