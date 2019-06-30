@@ -22,39 +22,56 @@ class Mushroom(pg.sprite.Sprite):
 
     def update(self):
         """Met à jour la sprite en fonction des événements."""
-        pressed = self.get_pressed_keys()
+        self._handle_keyboard()
+        self._handle_mouse()
 
+    def _handle_keyboard(self):
+        """Handles key pressed events."""
+        pressed = [
+            pg.key.name(key).lower()
+            for key, pressed in enumerate(pg.key.get_pressed())
+            if pressed
+        ]
         for key in pressed:
             if hasattr(self, key): 
-                getattr(self, key)()  
+                getattr(self, key)
 
+    def _handle_mouse(self):
+        """Handles mouse click events."""
+        if pg.mouse.get_pressed()[0]:
+            self.rect.centerx, self.rect.centery = pg.mouse.get_pos()
+            if self.rect.left < 0: 
+                self.rect.left = 0
+            if self.rect.right > settings.WIDTH: 
+                self.rect.right = settings.WIDTH
+            if self.rect.top < 0:
+                self.rect.top = 0
+            if self.rect.bottom > settings.HEIGHT:
+                self.rect.bottom = settings.HEIGHT
+
+    @property
     def up(self):
         """Déplace le personnage vers le haut."""
         if self.rect.top > 0:
             self.rect.move_ip(0, -settings.VELOCITY)
 
+    @property
     def down(self):
         """Déplace le personnage vers le bas."""
         if self.rect.bottom < settings.HEIGHT:
             self.rect.move_ip(0, settings.VELOCITY)
 
+    @property
     def right(self):
         """Déplace le personnage vers la droite."""
         if self.rect.right < settings.WIDTH:
             self.rect.move_ip(settings.VELOCITY, 0)
 
+    @property
     def left(self):
         """Déplace le personnage vers la gauche."""
         if self.rect.left > 0:
             self.rect.move_ip(-settings.VELOCITY, 0)
-
-    def get_pressed_keys(self):
-        """Retourne les noms des touches pressées par l'utilisateur."""
-        return [
-            pg.key.name(key).lower() 
-            for key, pressed in enumerate(pg.key.get_pressed())
-            if pressed
-        ]
 
 
 class Game:
@@ -86,33 +103,23 @@ class Game:
 
     def start(self):
         """Démarre la boucle principale du jeu."""
-        # Variable qui continue la boucle sa valeur est True. 
         self.running = True
-
         # Boucle principale du jeu
         while self.running:
             # Limite la vitesse d'exécution de la boucle à 30 frames par sec
             self.clock.tick(30)
             # On efface les sprites avec le fond
             self.sprites.clear(self.screen, self.background)
-            # La gestion des événements est confiée à une méthode séparée
-            self.process_events()
             # On appelle la méthode de mise à jour des sprites
             self.sprites.update()
             # On redessine les sprites
             updated_sprites = self.sprites.draw(self.screen)
             # Mettre à jour l'affichage avec les sprites qui ont bougé
             pg.display.update(updated_sprites)
-
-    def process_events(self):
-        """Traite les événements présents dans la file d'attente de pygame."""
-        # On regarde quels sont les événements dans la file d'attente
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                # Si l'utilisateur a clické sur la croix de fermeture de 
-                # la fenêtre: mettre self.running à False pour quitter
-                # l'application
+            # Quitter la boucle ?
+            if pg.event.get(pg.QUIT):
                 self.running = False
+
 
 
 def main():

@@ -1,13 +1,14 @@
-"""Exemple de gestion des événements claviers avec python et pygame.
+"""La gestion des événements peut être sortie de la boucle de jeu principale
+afin de factoriser le code.
 
 Cet exemple est une adaptation libre refactorisée du code trouvé dans le cours:
 https://bit.ly/2KfhS8T
 """
-
-# Importation des bibliothèques nécessaires
+ 
+ # Importation des bibliothèques nécessaires
 import pygame as pg
 
-from config import colors, sprites, settings
+from config import sprites
 
 
 class Game:
@@ -19,7 +20,7 @@ class Game:
         pg.init()
 
         # Création de l'écran principal
-        self.screen = pg.display.set_mode((settings.WIDTH, settings.HEIGHT))
+        self.screen = pg.display.set_mode((640, 480))
 
         # Chargement et collage du fond
         self.background = pg.image.load(sprites.BACKGROUND).convert()
@@ -47,24 +48,30 @@ class Game:
 
         # Boucle principale du jeu
         while self.running:
-            # On regarde quels sont les événements dans la file d'attente
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    # Si l'utilisateur a clické sur la croix de fermeture de 
-                    # la fenêtre: mettre self.running à False pour quitter
-                    # l'application
-                    self.running = False
-                elif event.type == pg.KEYDOWN:
-                    if event.key == pg.K_DOWN:
-                        # Si l'utilisateur appuie sur la flèche du bas, le
-                        # champignon se déplace vers le bas
-                        self.mushroom_rect.move_ip(0, 3)
+
+            # La gestion des événements est confiée à une méthode séparée
+            self.process_events()
 
             # Afficher le fond, puis le champignon
             self.screen.blit(self.background, (0, 0))
-            self.screen.blit(self.mushroom, self.mushroom_position)
+            self.screen.blit(self.mushroom, self.mushroom_rect)
             # Mettre à jour l'affichage
             pg.display.update()
+
+    def process_events(self):
+        """Traite les événements présents dans la file d'attente de pygame."""
+        # On regarde quels sont les événements dans la file d'attente
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                # Si l'utilisateur a clické sur la croix de fermeture de 
+                # la fenêtre: mettre self.running à False pour quitter
+                # l'application
+                self.running = False
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_DOWN:
+                    # Si l'utilisateur appuie sur la flèche du bas, le
+                    # champignon se déplace vers le bas
+                    self.mushroom_rect.move_ip(0, 3)
 
 
 def main():
