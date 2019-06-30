@@ -29,9 +29,10 @@ class Game:
         # Variable qui continue la boucle sa valeur est True. 
         self.running = True
 
+        print("To quit the game: press CTRL-C")
         # Boucle principale du jeu
         while self.running:
-            print("To quit the game: press CTRL-C")
+            pass
 
 
 def main():
