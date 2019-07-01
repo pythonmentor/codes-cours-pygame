@@ -1,5 +1,13 @@
-"""La gestion du personnage champignon peut être externalisée dans une classe
-séparée qui hérite de pg.sprite.Sprite.
+"""Exemple de gestion complète des événements claviers et souris avec python et
+pygame en utilisant le module pygame.sprite.
+
+La gestion du personnage champignon peut être externalisée dans une classe
+séparée qui hérite de pg.sprite.Sprite. On peut même externaliser une propriété
+commune à toutes les éventuelles sprites du jeu, celle de vouloir rester sur
+le plateau de jeu. On réalise ceci à l'aide d'un héritage.
+
+Cet exemple est une adaptation libre refactorisée du code trouvé dans le cours:
+https://bit.ly/2KfhS8T
 """
  
  # Importation des bibliothèques nécessaires

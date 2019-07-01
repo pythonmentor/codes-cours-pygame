@@ -1,5 +1,7 @@
-"""La gestion des événements peut être sortie de la boucle de jeu principale
-afin de factoriser le code.
+"""Exemple de gestion des événements claviers avec python et pygame. 
+
+Nous avons ici extrait la gestion des événements de la boucle principale du 
+jeu de ne pas obfusquer le flux principal de la boucle.
 
 Cet exemple est une adaptation libre refactorisée du code trouvé dans le cours:
 https://bit.ly/2KfhS8T
@@ -72,8 +74,14 @@ class Game:
                     # Si l'utilisateur appuie sur la flèche du bas, le
                     # champignon se déplace vers le bas
                     self.mushroom_rect.move_ip(0, settings.VELOCITY)
-                    if self.mushroom_rect.bottom > settings.HEIGHT:
-                        self.mushroom_rect.bottom = settings.HEIGHT
+                    self._check_boundaries_and_correct()
+
+    def _check_boundaries_and_correct(self):
+        """Checks if sprite is out of the allowed boundaries and correct 
+        position.
+        """
+        if self.mushroom_rect.bottom > settings.HEIGHT:
+            self.mushroom_rect.bottom = settings.HEIGHT
 
 
 def main():

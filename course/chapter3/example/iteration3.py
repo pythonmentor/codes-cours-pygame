@@ -1,5 +1,11 @@
-"""La gestion du personnage champignon peut être externalisée dans une classe
+"""Exemple de gestion des événements claviers avec python et pygame en 
+utilisant le module pygame.sprite.
+
+La gestion du personnage champignon peut être externalisée dans une classe
 séparée qui hérite de pg.sprite.Sprite.
+
+Cet exemple est une adaptation libre refactorisée du code trouvé dans le cours:
+https://bit.ly/2KfhS8T
 """
  
  # Importation des bibliothèques nécessaires
@@ -8,24 +14,7 @@ import pygame as pg
 from ..config import settings
 
 
-class Sprite(pg.sprite.Sprite):
-    """Représente une sprite du jeu."""
-
-    def _check_boundaries_and_correct(self):
-        """Checks if sprite is out of the allowed boundaries and correct 
-        position.
-        """
-        if self.rect.left < 0: 
-            self.rect.left = 0
-        if self.rect.right > settings.WIDTH: 
-            self.rect.right = settings.WIDTH
-        if self.rect.top < 0:
-            self.rect.top = 0
-        if self.rect.bottom > settings.HEIGHT:
-            self.rect.bottom = settings.HEIGHT
-
-
-class Mushroom(Sprite):
+class Mushroom(pg.sprite.Sprite):
     """Représente le personnage principal du jeu."""
 
     def __init__(self):
@@ -64,6 +53,19 @@ class Mushroom(Sprite):
     def left(self):
         """Déplace le personnage vers la gauche."""
         self.rect.move_ip(-settings.VELOCITY, 0)
+
+    def _check_boundaries_and_correct(self):
+        """Checks if sprite is out of the allowed boundaries and correct 
+        position.
+        """
+        if self.rect.left < 0: 
+            self.rect.left = 0
+        if self.rect.right > settings.WIDTH: 
+            self.rect.right = settings.WIDTH
+        if self.rect.top < 0:
+            self.rect.top = 0
+        if self.rect.bottom > settings.HEIGHT:
+            self.rect.bottom = settings.HEIGHT
 
 
 class Game:
