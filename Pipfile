@@ -7,6 +7,12 @@ verify_ssl = true
 pylint = "*"
 flake8 = "*"
 autopep8 = "*"
+pytest = "*"
+pytest-mock = "*"
 
 [packages]
 pygame = "*"
+click = "*"
+
+[requires]
+python_version = "3.7"

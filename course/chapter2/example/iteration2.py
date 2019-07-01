@@ -1,5 +1,5 @@
-"""Exemple de création d'une fenêtre avec une image en fond et un personnage
-avec python et pygame.
+"""Exemple de création d'une fenêtre avec une image en fond avec python et 
+pygame.
 
 Cet exemple est une adaptation libre refactorisée du code trouvé dans le cours:
 https://bit.ly/2EEmtxR
@@ -8,8 +8,7 @@ https://bit.ly/2EEmtxR
 # Importation des bibliothèques nécessaires
 import pygame as pg
 
-from config import colors, sprites, settings
-
+from ..config import settings
 
 class Game:
     """Représente le jeu lui-même."""
@@ -19,20 +18,12 @@ class Game:
         # Initialisation de la bibliothèque Pygame
         pg.init()
 
-        # Création de l'écran principal
+        # Création de l'écran principal de taille 640px x 480px
         self.screen = pg.display.set_mode((settings.WIDTH, settings.HEIGHT))
 
         # Chargement et collage du fond
-        self.background = pg.image.load(sprites.BACKGROUND).convert()
+        self.background = pg.image.load(settings.BACKGROUND).convert()
         self.screen.blit(self.background, (0, 0))
-
-        # Chargement et collage du personnage
-        self.mushroom = pg.image.load(sprites.MUSHROOM).convert()
-        # set_colorkey permet de sélectionner la couleur transparente. Une
-        # alternative, si l'image est déjà transparente, est d'utiliser
-        # la méthode convert_alpha() au lieu de convert().
-        self.mushroom.set_colorkey(colors.BLACK)
-        self.screen.blit(self.mushroom, (200, 300))
 
         # Création d'une variable indiquant si le jeu est en cours
         self.running = False
@@ -54,7 +45,7 @@ class Game:
 
             # Pour le moment, on utilise le terminal pour demander à
             # l'utilisateur s'il désire quitter l'application
-            response = input("Enter 'quit' to leave the game? ").lower()
+            response = input("Enter quit to leave the game? ").lower()
             if response == "quit":
                 self.running = False
 

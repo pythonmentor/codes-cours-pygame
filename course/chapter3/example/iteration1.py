@@ -7,7 +7,7 @@ https://bit.ly/2KfhS8T
 # Importation des bibliothèques nécessaires
 import pygame as pg
 
-from config import colors, sprites, settings
+from ..config import settings
 
 
 class Game:
@@ -22,11 +22,11 @@ class Game:
         self.screen = pg.display.set_mode((settings.WIDTH, settings.HEIGHT))
 
         # Chargement et collage du fond
-        self.background = pg.image.load(sprites.BACKGROUND).convert()
+        self.background = pg.image.load(settings.BACKGROUND).convert()
         self.screen.blit(self.background, (0, 0))
 
         # Chargement et collage du personnage
-        self.mushroom = pg.image.load(sprites.MUSHROOM).convert_alpha()
+        self.mushroom = pg.image.load(settings.MUSHROOM).convert_alpha()
         self.mushroom_rect = self.mushroom.get_rect()
         self.screen.blit(self.mushroom, self.mushroom_rect)
 
@@ -58,7 +58,9 @@ class Game:
                     if event.key == pg.K_DOWN:
                         # Si l'utilisateur appuie sur la flèche du bas, le
                         # champignon se déplace vers le bas
-                        self.mushroom_rect.move_ip(0, 3)
+                        self.mushroom_rect.move_ip(0, settings.VELOCITY)
+                        if self.mushroom_rect.bottom > settings.HEIGHT:
+                            self.mushroom_rect.bottom = settings.HEIGHT
 
             # Afficher le fond, puis le champignon
             self.screen.blit(self.background, (0, 0))

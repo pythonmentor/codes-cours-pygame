@@ -7,7 +7,7 @@ https://bit.ly/2EEmtxR
 # Importation des bibliothèques nécessaires
 import pygame as pg
 
-from config import settings
+from ..config import settings
 
 
 class Game:

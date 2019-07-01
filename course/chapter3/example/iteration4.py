@@ -5,10 +5,27 @@ séparée qui hérite de pg.sprite.Sprite.
  # Importation des bibliothèques nécessaires
 import pygame as pg
 
-from config import sprites, settings
+from ..config import settings
 
 
-class Mushroom(pg.sprite.Sprite):
+class Sprite(pg.sprite.Sprite):
+    """Représente une sprite du jeu."""
+
+    def _check_boundaries_and_correct(self):
+        """Checks if sprite is out of the allowed boundaries and correct 
+        position.
+        """
+        if self.rect.left < 0: 
+            self.rect.left = 0
+        if self.rect.right > settings.WIDTH: 
+            self.rect.right = settings.WIDTH
+        if self.rect.top < 0:
+            self.rect.top = 0
+        if self.rect.bottom > settings.HEIGHT:
+            self.rect.bottom = settings.HEIGHT
+
+
+class Mushroom(Sprite):
     """Représente le personnage principal du jeu."""
 
     def __init__(self):
@@ -17,61 +34,47 @@ class Mushroom(pg.sprite.Sprite):
         super().__init__()
         # L'image représentant le champignon est stockée dans l'attribut 
         # image et sa position dans l'attribut rect.
-        self.image = pg.image.load(sprites.MUSHROOM).convert_alpha()
+        self.image = pg.image.load(settings.MUSHROOM).convert_alpha()
         self.rect = self.image.get_rect()
 
     def update(self):
         """Met à jour la sprite en fonction des événements."""
-        self._handle_keyboard()
-        self._handle_mouse()
+        self._process_keyboard()
+        self._process_mouse()
 
-    def _handle_keyboard(self):
+    def _process_keyboard(self):
         """Handles key pressed events."""
-        pressed = [
-            pg.key.name(key).lower()
-            for key, pressed in enumerate(pg.key.get_pressed())
-            if pressed
-        ]
-        for key in pressed:
-            if hasattr(self, key): 
+        for key, pressed in enumerate(pg.key.get_pressed()):
+            key = pg.key.name(key).lower()
+            if pressed and hasattr(self, key):
                 getattr(self, key)
+                self._check_boundaries_and_correct()
 
-    def _handle_mouse(self):
+    def _process_mouse(self):
         """Handles mouse click events."""
         if pg.mouse.get_pressed()[0]:
             self.rect.centerx, self.rect.centery = pg.mouse.get_pos()
-            if self.rect.left < 0: 
-                self.rect.left = 0
-            if self.rect.right > settings.WIDTH: 
-                self.rect.right = settings.WIDTH
-            if self.rect.top < 0:
-                self.rect.top = 0
-            if self.rect.bottom > settings.HEIGHT:
-                self.rect.bottom = settings.HEIGHT
+            self._check_boundaries_and_correct()
 
     @property
     def up(self):
         """Déplace le personnage vers le haut."""
-        if self.rect.top > 0:
-            self.rect.move_ip(0, -settings.VELOCITY)
+        self.rect.move_ip(0, -settings.VELOCITY)
 
     @property
     def down(self):
         """Déplace le personnage vers le bas."""
-        if self.rect.bottom < settings.HEIGHT:
-            self.rect.move_ip(0, settings.VELOCITY)
+        self.rect.move_ip(0, settings.VELOCITY)
 
     @property
     def right(self):
         """Déplace le personnage vers la droite."""
-        if self.rect.right < settings.WIDTH:
-            self.rect.move_ip(settings.VELOCITY, 0)
+        self.rect.move_ip(settings.VELOCITY, 0)
 
     @property
     def left(self):
         """Déplace le personnage vers la gauche."""
-        if self.rect.left > 0:
-            self.rect.move_ip(-settings.VELOCITY, 0)
+        self.rect.move_ip(-settings.VELOCITY, 0)
 
 
 class Game:
@@ -87,7 +90,7 @@ class Game:
         pg.display.set_caption("Mushrooms paradise")
 
         # Chargement et collage du fond
-        self.background = pg.image.load(sprites.BACKGROUND).convert()
+        self.background = pg.image.load(settings.BACKGROUND).convert()
         self.screen.blit(self.background, (0, 0))
 
         # Groupe contenant les sprites de notre jeu
@@ -119,7 +122,6 @@ class Game:
             # Quitter la boucle ?
             if pg.event.get(pg.QUIT):
                 self.running = False
-
 
 
 def main():
